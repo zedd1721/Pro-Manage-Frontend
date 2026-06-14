@@ -25,8 +25,14 @@ function NotFoundPage() {
 }
 
 const routeTree = rootRoute.addChildren([
-  fullPageLayoutRoute.addChildren([authRoutes]),
-  appLayoutRoute.addChildren([homeRoute, projectsRoute, settingsRoute]),
+  fullPageLayoutRoute.addChildren([
+    authRoutes
+  ]),
+  appLayoutRoute.addChildren([
+    homeRoute, 
+    projectsRoute, 
+    settingsRoute
+  ]),
 ]);
 
 export const router = createRouter({

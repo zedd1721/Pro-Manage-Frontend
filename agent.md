@@ -1,4 +1,9 @@
-read Qoneqt-Web-App-v2\src\router
-and I want to setup tanstack router in my pro-manage app, and I want to setup like Qoneqt web app, but I am not understanding how to do it, its very confusing. There are no complex routing, I will have a sidebar and its component and for the full page , auth, etc, will be in the full page routing.
+# UI Building
 
-First explain me how to do it, if I said yes then code it, and for the sidebar just write the <SideBar /> later I will code it according to my need.
+View Images in ```Pro-Manage\Agent-Images\*```
+I got to know that codex is better in UI building even better then claude itself, so prove it to me, Use your frontend skills to build UI, I want exactly same UI as inside Agent-Images\*
+for the colors the inner circle (#317F8B) the left background color (#17A2B8)
+
+---
+
+**Note:** Dont write any logic, just build UI, I will write logic later. And other then auth dont touch any other file
