@@ -1,0 +1,140 @@
+import { Link } from "@tanstack/react-router";
+import { Eye, LockKeyhole, Mail, UserRound } from "lucide-react";
+import loginPageImage from "@/assets/Login_page.png";
+
+const PRIMARY = "#17A2B8";
+const CIRCLE = "#317F8B";
+const BORDER = "#d4d4d8";
+const TEXT = "#343434";
+const MUTED = "#8b8b8b";
+
+function EyeIcon() {
+  return <Eye className="size-4 stroke-[1.75] sm:size-4.5" aria-hidden="true" />;
+}
+
+function AstronautIllustration() {
+  return (
+    <div className="relative mx-auto w-[48%] sm:w-[36%] lg:w-[42%] xl:w-[38%]">
+      <div
+        className="absolute left-1/2 top-[35%] aspect-square w-[85%] -translate-x-1/2 -translate-y-1/2 rounded-full"
+        style={{ backgroundColor: CIRCLE }}
+      />
+      <img
+        src={loginPageImage}
+        alt=""
+        className="relative z-10 mx-auto block h-auto w-[72%] object-contain drop-shadow-[0_18px_22px_rgba(0,0,0,0.12)]"
+      />
+    </div>
+  );
+}
+
+function FieldIcon({ icon }) {
+  const Icon = {
+    user: UserRound,
+    lock: LockKeyhole,
+    mail: Mail,
+  }[icon] ?? Mail;
+
+  return <Icon className="size-4 stroke-[1.75] sm:size-4.5" aria-hidden="true" />;
+}
+
+function AuthField({ id, placeholder, type, icon, hasEye }) {
+  return (
+    <label
+      htmlFor={id}
+      className="flex items-center gap-2.5 rounded-[1rem] border border-[color:var(--auth-border)] bg-white px-3 py-3 text-[color:var(--auth-muted)] shadow-[0_0_0_1px_rgba(0,0,0,0.015)] sm:gap-3 sm:px-3.5 sm:py-3.5"
+    >
+      <span className="shrink-0" aria-hidden="true">
+        <FieldIcon icon={icon} />
+      </span>
+      <input
+        id={id}
+        type={type}
+        placeholder={placeholder}
+        aria-label={placeholder}
+        className="min-w-0 flex-1 bg-transparent text-[0.9rem] font-light text-[color:var(--auth-text)] outline-none placeholder:text-[color:var(--auth-muted)] sm:text-[0.95rem]"
+      />
+      {hasEye ? (
+        <span className="shrink-0" aria-hidden="true">
+          <EyeIcon />
+        </span>
+      ) : null}
+    </label>
+  );
+}
+
+function AuthScreen({
+  title,
+  fields,
+  submitText,
+  switchPrompt,
+  switchText,
+  switchTo,
+}) {
+  return (
+    <section
+      className="fixed inset-0 z-10 overflow-y-auto bg-white lg:overflow-hidden"
+      style={{
+        fontFamily: '"Avenir Next", "Trebuchet MS", "Segoe UI", sans-serif',
+        "--auth-primary": PRIMARY,
+        "--auth-circle": CIRCLE,
+        "--auth-border": BORDER,
+        "--auth-text": TEXT,
+        "--auth-muted": MUTED,
+      }}
+    >
+      <div
+        className="grid min-h-[100svh]"
+        style={{
+          gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 22rem), 1fr))",
+        }}
+      >
+        <aside className="flex min-h-[34svh] items-center justify-center overflow-hidden bg-[color:var(--auth-primary)] px-[4vw] py-[3svh] text-center text-white">
+          <div className="flex w-full flex-col items-center justify-center gap-[1.1svh]">
+            <AstronautIllustration />
+            <h2 className="whitespace-nowrap text-[clamp(1.15rem,2vw,2rem)] font-light tracking-[-0.04em]">
+              Welcome aboard my friend
+            </h2>
+            <p className="whitespace-nowrap text-[clamp(0.78rem,0.9vw,0.98rem)] font-light text-white/90">
+              just a couple of clicks and we start
+            </p>
+          </div>
+        </aside>
+
+        <main className="flex items-center justify-center bg-white px-[4vw] py-[3svh]">
+          <div className="w-full max-w-[27rem]">
+            <h1 className="text-center text-[clamp(1.55rem,3vw,2.35rem)] font-semibold tracking-[-0.04em] text-[color:var(--auth-text)]">
+              {title}
+            </h1>
+
+            <form className="mt-[2.2svh] space-y-[1.1svh]">
+              {fields.map((field) => (
+                <AuthField key={field.id} {...field} />
+              ))}
+
+              <button
+                type="button"
+                className="mt-[1.4svh] w-full rounded-full bg-[color:var(--auth-primary)] px-4 py-3 text-[0.92rem] font-medium text-white transition hover:brightness-[1.03] sm:py-3.5 sm:text-[0.98rem]"
+              >
+                {submitText}
+              </button>
+            </form>
+
+            <p className="mt-[1.9svh] text-center text-[0.9rem] font-light text-[color:var(--auth-muted)] sm:text-[0.98rem]">
+              {switchPrompt}
+            </p>
+
+            <Link
+              to={switchTo}
+              className="mt-[1.4svh] flex w-full items-center justify-center rounded-full border border-[color:var(--auth-primary)] px-4 py-3 text-[0.92rem] font-medium text-[color:var(--auth-primary)] transition hover:bg-[color:var(--auth-primary)]/5 sm:py-3.5 sm:text-[0.98rem]"
+            >
+              {switchText}
+            </Link>
+          </div>
+        </main>
+      </div>
+    </section>
+  );
+}
+
+export default AuthScreen;
