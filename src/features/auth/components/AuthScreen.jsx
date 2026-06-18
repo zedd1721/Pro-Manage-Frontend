@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Eye, LockKeyhole, Mail, UserRound } from "lucide-react";
 import loginPageImage from "@/assets/Login_page.png";
@@ -38,28 +39,39 @@ function FieldIcon({ icon }) {
   return <Icon className="size-4 stroke-[1.75] sm:size-4.5" aria-hidden="true" />;
 }
 
-function AuthField({ id, placeholder, type, icon, hasEye }) {
+function AuthField({ id, placeholder, type, icon, hasEye, value, error, onChange }) {
   return (
-    <label
-      htmlFor={id}
-      className="flex items-center gap-2.5 rounded-[1rem] border border-[color:var(--auth-border)] bg-white px-3 py-3 text-[color:var(--auth-muted)] shadow-[0_0_0_1px_rgba(0,0,0,0.015)] sm:gap-3 sm:px-3.5 sm:py-3.5"
-    >
-      <span className="shrink-0" aria-hidden="true">
-        <FieldIcon icon={icon} />
-      </span>
-      <input
-        id={id}
-        type={type}
-        placeholder={placeholder}
-        aria-label={placeholder}
-        className="min-w-0 flex-1 bg-transparent text-[0.9rem] font-light text-[color:var(--auth-text)] outline-none placeholder:text-[color:var(--auth-muted)] sm:text-[0.95rem]"
-      />
-      {hasEye ? (
+    <div>
+      <label
+        htmlFor={id}
+        className="flex items-center gap-2.5 rounded-[1rem] border bg-white px-3 py-3 text-[color:var(--auth-muted)] shadow-[0_0_0_1px_rgba(0,0,0,0.015)] sm:gap-3 sm:px-3.5 sm:py-3.5"
+        style={{
+          borderColor: error ? "#ef4444" : "var(--auth-border)",
+        }}
+      >
         <span className="shrink-0" aria-hidden="true">
-          <EyeIcon />
+          <FieldIcon icon={icon} />
         </span>
+        <input
+          id={id}
+          type={type}
+          placeholder={placeholder}
+          aria-label={placeholder}
+          value={value}
+          onChange={(event) => onChange(id, event.target.value)}
+          className="min-w-0 flex-1 bg-transparent text-[0.9rem] font-light text-[color:var(--auth-text)] outline-none placeholder:text-[color:var(--auth-muted)] sm:text-[0.95rem]"
+        />
+        {hasEye ? (
+          <span className="shrink-0" aria-hidden="true">
+            <EyeIcon />
+          </span>
+        ) : null}
+      </label>
+
+      {error ? (
+        <p className="mt-1.5 px-1 text-[0.83rem] font-medium text-red-500">{error}</p>
       ) : null}
-    </label>
+    </div>
   );
 }
 
@@ -71,6 +83,62 @@ function AuthScreen({
   switchText,
   switchTo,
 }) {
+  const [values, setValues] = useState(() =>
+    Object.fromEntries(fields.map((field) => [field.id, ""]))
+  );
+  const [errors, setErrors] = useState({});
+
+  function handleChange(id, nextValue) {
+    setValues((currentValues) => ({
+      ...currentValues,
+      [id]: nextValue,
+    }));
+
+    setErrors((currentErrors) => {
+      if (!currentErrors[id]) {
+        return currentErrors;
+      }
+
+      const nextErrors = { ...currentErrors };
+      delete nextErrors[id];
+      return nextErrors;
+    });
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+
+    const nextErrors = {};
+
+    fields.forEach((field) => {
+      const rawValue = values[field.id] ?? "";
+      const trimmedValue = rawValue.trim();
+
+      if (!trimmedValue) {
+        nextErrors[field.id] = `${field.placeholder} is required.`;
+        return;
+      }
+
+      if (field.type === "email") {
+        const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedValue);
+
+        if (!isEmailValid) {
+          nextErrors[field.id] = "Please enter a valid email address.";
+        }
+      }
+    });
+
+    if (
+      values["register-password"] &&
+      values["register-confirm-password"] &&
+      values["register-password"] !== values["register-confirm-password"]
+    ) {
+      nextErrors["register-confirm-password"] = "Passwords do not match.";
+    }
+
+    setErrors(nextErrors);
+  }
+
   return (
     <section
       className="fixed inset-0 z-10 overflow-y-auto bg-white lg:overflow-hidden"
@@ -107,13 +175,19 @@ function AuthScreen({
               {title}
             </h1>
 
-            <form className="mt-[2.2svh] space-y-[1.1svh]">
+            <form className="mt-[2.2svh] space-y-[1.1svh]" onSubmit={handleSubmit}>
               {fields.map((field) => (
-                <AuthField key={field.id} {...field} />
+                <AuthField
+                  key={field.id}
+                  {...field}
+                  value={values[field.id] ?? ""}
+                  error={errors[field.id]}
+                  onChange={handleChange}
+                />
               ))}
 
               <button
-                type="button"
+                type="submit"
                 className="mt-[1.4svh] w-full rounded-full bg-[color:var(--auth-primary)] px-4 py-3 text-[0.92rem] font-medium text-white transition hover:brightness-[1.03] sm:py-3.5 sm:text-[0.98rem]"
               >
                 {submitText}
