@@ -1,10 +1,16 @@
 import { motion } from "framer-motion";
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, Play, Shield, Zap, Infinity } from "lucide-react";
+import {
+  ArrowRight,
+  Play,
+  Shield,
+  Zap,
+  Infinity as InfinityIcon,
+} from "lucide-react";
 import DashboardMockup from "@/features/landing/components/DashboardMockup";
 
 const trustIndicators = [
-  { icon: Infinity, label: "Unlimited Projects" },
+  { icon: InfinityIcon, label: "Unlimited Projects" },
   { icon: Zap, label: "Real-Time Collaboration" },
   { icon: Shield, label: "Enterprise Security" },
 ];

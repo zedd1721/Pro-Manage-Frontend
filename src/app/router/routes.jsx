@@ -1,10 +1,11 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createRouter } from "@tanstack/react-router";
 import { rootRoute } from "@/app/router/rootRoute";
 import { appLayoutRoute } from "@/app/router/appLayoutRoute";
 import { fullPageLayoutRoute } from "@/app/router/fullPageLayoutRoute";
 import { authRoutes } from "@/features/auth";
+import { dashboardRoute } from "@/features/dashboard";
 import { landingRoute } from "@/features/landing";
-import { homeRoute } from "@/features/home";
 import { projectsRoute } from "@/features/projects";
 import { settingsRoute } from "@/features/settings";
 
@@ -27,11 +28,11 @@ function NotFoundPage() {
 
 const routeTree = rootRoute.addChildren([
   landingRoute,
+  dashboardRoute,
   fullPageLayoutRoute.addChildren([
     authRoutes
   ]),
   appLayoutRoute.addChildren([
-    homeRoute, 
     projectsRoute, 
     settingsRoute
   ]),

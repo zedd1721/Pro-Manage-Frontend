@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { Outlet, createRoute } from "@tanstack/react-router";
 import { rootRoute } from "@/app/router/rootRoute";
 
