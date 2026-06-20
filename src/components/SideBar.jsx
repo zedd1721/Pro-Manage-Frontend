@@ -19,7 +19,7 @@ function SideBar() {
 
       <nav className="flex flex-col gap-2">
         <Link
-          to="/"
+          to="/dashboard"
           className={navLinkClass}
           activeProps={{ className: `${navLinkClass} bg-slate-900 text-white` }}
         >

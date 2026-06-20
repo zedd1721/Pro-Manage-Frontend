@@ -4,6 +4,6 @@ import HomePage from "@/features/home/pages/HomePage";
 
 export const homeRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
-  path: "/",
+  path: "/dashboard",
   component: HomePage,
 });

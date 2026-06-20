@@ -3,6 +3,16 @@
 
 @theme {
   --font-sans: "Poppins", sans-serif;
+  --color-background: #f8fafc;
+  --color-primary: #1a87d7;
+  --color-primary-dark: #166fb1;
+  --color-accent: #10b981;
+  --color-warning: #f59e0b;
+  --color-surface-light: #f1f5f9;
+  --color-surface-lighter: #e2e8f0;
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-muted: #64748b;
 }
 
 html,

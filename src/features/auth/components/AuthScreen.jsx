@@ -152,7 +152,7 @@ function AuthScreen({
       }}
     >
       <div
-        className="grid min-h-[100svh]"
+        className="grid min-h-svh"
         style={{
           gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 22rem), 1fr))",
         }}
@@ -188,13 +188,13 @@ function AuthScreen({
 
               <button
                 type="submit"
-                className="mt-[1.4svh] w-full rounded-full bg-[color:var(--auth-primary)] px-4 py-3 text-[0.92rem] font-medium text-white transition hover:brightness-[1.03] sm:py-3.5 sm:text-[0.98rem]"
+                className="mt-[1.4svh] w-full rounded-full bg-(--auth-primary) px-4 py-3 text-[0.92rem] font-medium text-white transition hover:brightness-[1.03] sm:py-3.5 sm:text-[0.98rem]"
               >
                 {submitText}
               </button>
             </form>
 
-            <p className="mt-[1.9svh] text-center text-[0.9rem] font-light text-[color:var(--auth-muted)] sm:text-[0.98rem]">
+            <p className="mt-[1.9svh] text-center text-[0.9rem] font-light text-(--auth-muted) sm:text-[0.98rem]">
               {switchPrompt}
             </p>
 

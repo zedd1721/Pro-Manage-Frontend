@@ -3,6 +3,7 @@ import { rootRoute } from "@/app/router/rootRoute";
 import { appLayoutRoute } from "@/app/router/appLayoutRoute";
 import { fullPageLayoutRoute } from "@/app/router/fullPageLayoutRoute";
 import { authRoutes } from "@/features/auth";
+import { landingRoute } from "@/features/landing";
 import { homeRoute } from "@/features/home";
 import { projectsRoute } from "@/features/projects";
 import { settingsRoute } from "@/features/settings";
@@ -25,6 +26,7 @@ function NotFoundPage() {
 }
 
 const routeTree = rootRoute.addChildren([
+  landingRoute,
   fullPageLayoutRoute.addChildren([
     authRoutes
   ]),
