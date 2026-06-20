@@ -1,5 +1,13 @@
 import { useState, useRef, useEffect } from "react";
-import { X, Plus, Trash2, ChevronDown, CheckSquare, Tag } from "lucide-react";
+import {
+  X,
+  Plus,
+  Trash2,
+  ChevronDown,
+  CheckSquare,
+  Tag,
+  CalendarDays,
+} from "lucide-react";
 
 const PRIORITY_OPTIONS = [
   { value: "low",    label: "Low",    dot: "bg-slate-400",  bg: "bg-slate-50",  text: "text-slate-600"  },
@@ -27,6 +35,7 @@ export default function AddTaskModal({ onClose, onSave }) {
   const [priority, setPriority]   = useState("medium");
   const [assignee, setAssignee]   = useState("");
   const [category, setCategory]   = useState("");
+  const [dueDate, setDueDate]     = useState("");
   const [priorityOpen, setPriorityOpen] = useState(false);
   const [assigneeOpen, setAssigneeOpen] = useState(false);
   const [checklist, setChecklist] = useState([]);
@@ -66,7 +75,14 @@ export default function AddTaskModal({ onClose, onSave }) {
 
   function handleSave() {
     if (!title.trim()) return;
-    onSave({ title: title.trim(), priority, assignee, category, checklist });
+    onSave({
+      title: title.trim(),
+      priority,
+      assignee,
+      category,
+      dueDate,
+      checklist,
+    });
     onClose();
   }
 
@@ -78,7 +94,6 @@ export default function AddTaskModal({ onClose, onSave }) {
     >
       <div
         className="bg-white rounded-2xl shadow-2xl w-full max-w-[500px] flex flex-col overflow-hidden animate-in"
-        style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
       >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
@@ -128,7 +143,7 @@ export default function AddTaskModal({ onClose, onSave }) {
                     key={cat.label}
                     onClick={() => setCategory(isSelected ? "" : cat.label)}
                     className={`
-                      px-3 py-1.5 rounded-full text-[12px] font-semibold transition-all border
+                      cursor-pointer px-3 py-1.5 rounded-full text-[12px] font-semibold transition-all border
                       ${isSelected
                         ? `${cat.bg} ${cat.text} ring-2 ${cat.ring} border-transparent scale-105 shadow-sm`
                         : `bg-gray-50 text-gray-500 border-gray-100 hover:${cat.bg} hover:${cat.text} hover:border-transparent`
@@ -166,7 +181,7 @@ export default function AddTaskModal({ onClose, onSave }) {
               <div ref={priorityRef} className="relative">
                 <button
                   onClick={() => { setPriorityOpen((o) => !o); setAssigneeOpen(false); }}
-                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl border text-[13px] font-medium transition-all ${
+                  className={`w-full cursor-pointer flex items-center justify-between px-3 py-2.5 rounded-xl border text-[13px] font-medium transition-all ${
                     priorityOpen
                       ? "border-blue-400 ring-2 ring-blue-50"
                       : "border-gray-200 hover:border-gray-300"
@@ -188,7 +203,7 @@ export default function AddTaskModal({ onClose, onSave }) {
                       <button
                         key={opt.value}
                         onClick={() => { setPriority(opt.value); setPriorityOpen(false); }}
-                        className={`w-full flex items-center gap-2.5 px-3 py-2.5 text-[12.5px] font-medium transition-colors hover:bg-gray-50 ${
+                        className={`w-full cursor-pointer flex items-center gap-2.5 px-3 py-2.5 text-[12.5px] font-medium transition-colors hover:bg-gray-50 ${
                           priority === opt.value ? `${opt.text} ${opt.bg}` : "text-gray-600"
                         }`}
                       >
@@ -212,7 +227,7 @@ export default function AddTaskModal({ onClose, onSave }) {
               <div ref={assigneeRef} className="relative">
                 <button
                   onClick={() => { setAssigneeOpen((o) => !o); setPriorityOpen(false); }}
-                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl border text-[13px] transition-all ${
+                  className={`w-full cursor-pointer flex items-center justify-between px-3 py-2.5 rounded-xl border text-[13px] transition-all ${
                     assigneeOpen
                       ? "border-blue-400 ring-2 ring-blue-50"
                       : "border-gray-200 hover:border-gray-300"
@@ -242,7 +257,7 @@ export default function AddTaskModal({ onClose, onSave }) {
                         <button
                           key={name}
                           onClick={() => { setAssignee(name); setAssigneeOpen(false); }}
-                          className={`w-full flex items-center gap-3 px-3 py-2.5 text-[12.5px] font-medium transition-colors hover:bg-gray-50 ${
+                          className={`w-full cursor-pointer flex items-center gap-3 px-3 py-2.5 text-[12.5px] font-medium transition-colors hover:bg-gray-50 ${
                             assignee === name ? "bg-blue-50 text-blue-700" : "text-gray-700"
                           }`}
                         >
@@ -260,6 +275,33 @@ export default function AddTaskModal({ onClose, onSave }) {
                 )}
               </div>
             </div>
+          </div>
+
+          {/* Due date */}
+          <div className="flex flex-col gap-1.5">
+            <div className="flex items-center justify-between gap-3">
+              <label className="text-[11px] font-semibold text-gray-400 uppercase tracking-widest flex items-center gap-1.5">
+                <CalendarDays className="w-3 h-3" />
+                Due Date
+              </label>
+              {dueDate ? (
+                <button
+                  type="button"
+                  onClick={() => setDueDate("")}
+                  className="text-[11px] font-medium text-gray-400 transition-colors hover:text-gray-600"
+                >
+                  Clear
+                </button>
+              ) : (
+                <span className="text-[10.5px] text-gray-300">Optional</span>
+              )}
+            </div>
+            <input
+              type="date"
+              value={dueDate}
+              onChange={(e) => setDueDate(e.target.value)}
+              className="w-full cursor-pointer rounded-xl border border-gray-200 px-4 py-2.5 text-[13px] text-gray-700 focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-50 transition-all"
+            />
           </div>
 
           {/* Checklist */}

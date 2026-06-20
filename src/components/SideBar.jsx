@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import {
+  ChartNoAxesCombined,
   LayoutDashboard,
   FolderKanban,
   Settings,
@@ -17,6 +18,7 @@ const activeNavLinkClass =
 
 const navItems = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/analytics", label: "Analytics", icon: ChartNoAxesCombined },
   { to: "/projects", label: "Projects", icon: FolderKanban },
   { to: "/settings", label: "Settings", icon: Settings },
 ];

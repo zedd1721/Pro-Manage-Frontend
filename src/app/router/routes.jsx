@@ -3,6 +3,7 @@ import { createRouter } from "@tanstack/react-router";
 import { rootRoute } from "@/app/router/rootRoute";
 import { appLayoutRoute } from "@/app/router/appLayoutRoute";
 import { fullPageLayoutRoute } from "@/app/router/fullPageLayoutRoute";
+import { analyticsRoute } from "@/features/analytics";
 import { authRoutes } from "@/features/auth";
 import { dashboardRoute } from "@/features/dashboard";
 import { landingRoute } from "@/features/landing";
@@ -33,6 +34,7 @@ const routeTree = rootRoute.addChildren([
     authRoutes
   ]),
   appLayoutRoute.addChildren([
+    analyticsRoute,
     projectsRoute, 
     settingsRoute
   ]),
