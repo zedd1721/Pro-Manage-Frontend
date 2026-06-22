@@ -1,192 +1,202 @@
-Build only the **Analytics Page UI** for a project management web app.
+# Teams Page UI Prompt
+
+Build only the **Teams Page UI** for a project management web application.
+
+This is only UI development.
 
 Do not build backend logic.
 Do not integrate APIs.
+Do not create database logic.
 Use only static/dummy data for now.
-The UI should be ready so that API data can be connected later.
+The UI should be structured so that API integration can be added later.
 
 Tech stack:
 
 * React
 * Tailwind CSS
 * Framer Motion optional
-* Recharts optional for simple charts
-
-Page name:
-**Analytics**
-
-The Analytics page should show project-level analytics and member-wise analytics for the currently selected project.
+* Lucide React icons optional
 
 ---
 
-# Page Layout
+# Page Name
+
+**Teams**
+
+The Teams page is used to manage project members and handle team communication inside the currently selected project.
+
+The page should have two main tabs:
+
+1. Members
+2. Communication
+
+Do not add extra tabs or extra features.
+
+---
+
+# Main Page Layout
 
 Create a clean, modern SaaS dashboard UI.
 
-The page should have:
+The page should include:
 
 1. Page Header
-2. Project Analytics Horizontal Card
-3. Member Analytics Section
-4. Responsive layout for desktop, tablet, and mobile
+2. Tab Navigation
+3. Members Tab Content
+4. Communication Tab Content
 
-Use a professional project management dashboard style.
-
-Design should be:
+Design style:
 
 * Clean
 * Modern
 * Minimal
-* Easy to understand
-* Card-based
+* Professional
 * Responsive
-* Suitable for dark mode or light mode depending on existing app theme
+* Card-based
+* Suitable for a project management dashboard
 
 ---
 
-# 1. Page Header
+# Page Header
 
 At the top of the page, show:
 
 Title:
-**Analytics**
+
+**Teams**
 
 Subtitle:
-**Track project progress and member performance in one place.**
 
-Optional right-side small text:
+**Manage project members and communicate with your team.**
+
+Optional project label:
+
 **Current Project: ProjectFlow**
 
-Do not add filters, date range picker, export button, or extra features.
+Do not add search, filters, export buttons, or unnecessary actions.
 
 ---
 
-# 2. Project Analytics Horizontal Card
+# Tab Navigation
 
-Create one large horizontal analytics card at the top.
+Create two tabs:
 
-This card should show overall project statistics using static data.
+## Tab 1: Members
 
-Card title:
-**Project Overview**
+This tab should include:
 
-Inside the card, show analytics items horizontally.
+* Add Members
+* Member Profile
+* Member Status
+* Remove Member
 
-Analytics items:
+## Tab 2: Communication
 
-* Total Tasks
-* Backlog Tasks
-* To Do Tasks
-* In Progress Tasks
-* Done Tasks
-* Overdue Tasks
+This tab should include:
 
-Each analytics item should include:
+* Direct Messages
+* Groups
 
-* Label
-* Number
-* Small icon
-* Subtle background
-* Clean spacing
+The active tab should be clearly highlighted.
 
-Example static data:
-
-```js
-const projectAnalytics = {
-  totalTasks: 48,
-  backlogTasks: 8,
-  todoTasks: 14,
-  inProgressTasks: 11,
-  doneTasks: 15,
-  overdueTasks: 5,
-};
-```
-
-The horizontal card should look premium and organized.
-
-Desktop:
-
-* All analytics items should appear in one horizontal row if space allows.
-
-Tablet:
-
-* Items can wrap into 2 rows.
-
-Mobile:
-
-* Items should stack into a grid or vertical list.
+Use smooth tab switching UI.
 
 ---
 
-# 3. Member Analytics Section
+# Tab 1: Members UI
 
-Below the Project Overview card, create a section:
+The Members tab should focus on project member management.
 
-Title:
-**Member Analytics**
+## Section 1: Add Members
 
-Subtitle:
-**View task progress for each team member.**
+Create a card titled:
 
-Each member should be displayed in a separate card.
+**Add Member**
 
-Each member card should include:
+Inside the card, include a simple invite form.
 
-* Member name
-* Member role
+Fields:
+
+* Member Email
+* Role selector
+
+Role options:
+
+* Project Manager
+* Team Member
+
+Button:
+
+**Send Invite**
+
+Add helper text:
+
+**An invitation code will be sent to the member's email.**
+
+Use static UI only. Do not add real form submission logic.
+
+---
+
+## Section 2: Members List
+
+Create a section titled:
+
+**Project Members**
+
+Show members as cards or a clean list.
+
+Each member item/card should contain:
+
 * Avatar or initials
-* Assigned Tasks
-* Pending Tasks
-* In Progress Tasks
-* Completed Tasks
-* Backlog Tasks
+* Member name
+* Email
+* Role
+* Status: Online or Offline
+* Remove button
 
-Use static member data.
+Status design:
+
+* Online: green dot
+* Offline: gray dot
+
+Remove button:
+
+* Visible on each member card
+* Use a small danger-style button
+* No actual delete functionality required
 
 Example static data:
 
 ```js
-const membersAnalytics = [
+const members = [
   {
     id: 1,
     name: "Aarav Sharma",
-    role: "Frontend Developer",
-    assignedTasks: 12,
-    pendingTasks: 4,
-    inProgressTasks: 3,
-    completedTasks: 5,
-    backlogTasks: 0,
+    email: "aarav@example.com",
+    role: "Project Manager",
+    status: "Online",
   },
   {
     id: 2,
     name: "Priya Mehta",
+    email: "priya@example.com",
     role: "Backend Developer",
-    assignedTasks: 15,
-    pendingTasks: 5,
-    inProgressTasks: 4,
-    completedTasks: 4,
-    backlogTasks: 2,
+    status: "Online",
   },
   {
     id: 3,
     name: "Rohan Verma",
-    role: "UI/UX Designer",
-    assignedTasks: 9,
-    pendingTasks: 2,
-    inProgressTasks: 2,
-    completedTasks: 5,
-    backlogTasks: 0,
+    email: "rohan@example.com",
+    role: "Frontend Developer",
+    status: "Offline",
   },
   {
     id: 4,
     name: "Neha Singh",
-    role: "QA Engineer",
-    assignedTasks: 12,
-    pendingTasks: 3,
-    inProgressTasks: 2,
-    completedTasks: 6,
-    backlogTasks: 1,
-  },
+    email: "neha@example.com",
+    role: "UI/UX Designer",
+    status: "Offline",
+  }
 ];
 ```
 
@@ -196,69 +206,180 @@ const membersAnalytics = [
 
 Each member card should look clean and compact.
 
-Top section:
+Include:
 
-* Avatar or initials on the left
-* Member name
-* Member role
+* Avatar/initials
+* Name
+* Email
+* Role badge
+* Online/offline status indicator
+* Remove button
 
-Below that:
-Show analytics in small mini-stat boxes.
+Design requirements:
 
-Mini-stat boxes:
-
-* Assigned
-* Pending
-* In Progress
-* Completed
-* Backlog
-
-Each mini-stat box should show:
-
-* Label
-* Count
-
-Do not add edit buttons, delete buttons, filters, dropdowns, charts, search, or extra actions.
+* Rounded cards
+* Border
+* Soft shadow
+* Hover effect
+* Good spacing
+* Clear typography
 
 ---
 
-# UI Styling Requirements
+# Tab 2: Communication UI
 
-Use Tailwind CSS.
+The Communication tab should focus on team messaging and calling UI.
+
+It should have two sections:
+
+1. Direct Messages
+2. Groups
+
+Do not create real chat logic.
+Do not integrate WebRTC.
+Do not integrate Socket.IO.
+Only create the UI.
+
+---
+
+## Section 1: Direct Messages
+
+Create a card or panel titled:
+
+**Direct Messages**
+
+Show a list of team members available for direct communication.
+
+Each item should contain:
+
+* Avatar/initials
+* Member name
+* Online/offline status
+* Last message preview
+* Chat button
+* Video call button
+
+Example static data:
+
+```js
+const directMessages = [
+  {
+    id: 1,
+    name: "Aarav Sharma",
+    status: "Online",
+    lastMessage: "Can you review the task updates?",
+  },
+  {
+    id: 2,
+    name: "Priya Mehta",
+    status: "Online",
+    lastMessage: "Backend API structure is ready.",
+  },
+  {
+    id: 3,
+    name: "Rohan Verma",
+    status: "Offline",
+    lastMessage: "I will update the UI tomorrow.",
+  }
+];
+```
+
+Buttons:
+
+* Message
+* Video Call
+
+These buttons should be UI only. No real functionality required.
+
+---
+
+## Section 2: Groups
+
+Create a card or panel titled:
+
+**Groups**
+
+Show group chat cards.
+
+Each group card should contain:
+
+* Group name
+* Number of members
+* Short description
+* Chat button
+* Video call button
+
+Also include a static **Create Group** button at the top of the Groups section.
+
+Do not add modal functionality unless simple UI placeholder is needed.
+
+Example static data:
+
+```js
+const groups = [
+  {
+    id: 1,
+    name: "Frontend Team",
+    membersCount: 4,
+    description: "UI development and frontend tasks.",
+  },
+  {
+    id: 2,
+    name: "Backend Team",
+    membersCount: 3,
+    description: "APIs, database, authentication, and server logic.",
+  },
+  {
+    id: 3,
+    name: "Project Discussion",
+    membersCount: 8,
+    description: "General project updates and discussions.",
+  }
+];
+```
+
+---
+
+# Communication Card Design
+
+For Direct Messages and Groups:
 
 Use:
 
 * Rounded cards
-* Soft shadows
-* Good spacing
-* Clear typography
-* Subtle borders
-* Hover effects on cards
-* Responsive grid
-* Consistent colors
-* Professional SaaS dashboard look
+* Subtle border
+* Soft shadow
+* Clean spacing
+* Icons for chat and video call
+* Hover effects
+* Status indicators
 
-Suggested layout:
+The layout should feel like a mix of Slack, Linear, Notion, and ClickUp.
 
-```txt
-Analytics Page
-│
-├── Header
-│
-├── Project Overview Horizontal Card
-│   ├── Total Tasks
-│   ├── Backlog
-│   ├── To Do
-│   ├── In Progress
-│   ├── Done
-│   └── Overdue
-│
-└── Member Analytics
-    ├── Member Card 1
-    ├── Member Card 2
-    ├── Member Card 3
-    └── Member Card 4
-```
+---
+
+# Responsive Design
+
+Desktop:
+
+* Members tab:
+
+  * Add Member card at top
+  * Members displayed in grid/list below
+
+* Communication tab:
+
+  * Direct Messages and Groups can be displayed side-by-side if space allows
+
+Tablet:
+
+* Sections can stack cleanly
+
+Mobile:
+
+* Tabs remain usable
+* Cards stack vertically
+* Buttons remain easy to tap
 
 ---
 
@@ -266,42 +387,86 @@ Analytics Page
 
 Create reusable components:
 
-* AnalyticsPage
-* ProjectOverviewCard
-* ProjectStatItem
-* MemberAnalyticsCard
-* MemberStatItem
+```text
+TeamsPage
+├── TeamsHeader
+├── TeamsTabs
+├── MembersTab
+│   ├── AddMemberCard
+│   └── MemberCard
+└── CommunicationTab
+    ├── DirectMessagesPanel
+    ├── DirectMessageCard
+    ├── GroupsPanel
+    └── GroupCard
+```
 
-Keep the code clean and easy to modify later.
-
-Static data should be placed at the top of the file or in a separate constants section.
+Keep static data separate from JSX.
 
 ---
 
-# API Integration Readiness
-
-Design the data structure so that later I can replace static data with API response easily.
+# API Ready Structure
 
 Do not hardcode values directly inside JSX.
-Use mapped arrays wherever possible.
+
+Use arrays and map functions.
 
 Example:
 
 ```js
-projectStats.map((stat) => <ProjectStatItem key={stat.label} {...stat} />)
-membersAnalytics.map((member) => <MemberAnalyticsCard key={member.id} member={member} />)
+members.map((member) => (
+  <MemberCard key={member.id} member={member} />
+));
+
+directMessages.map((dm) => (
+  <DirectMessageCard key={dm.id} message={dm} />
+));
+
+groups.map((group) => (
+  <GroupCard key={group.id} group={group} />
+));
 ```
+
+The UI should be easy to connect with backend APIs later.
+
+---
+
+# Styling Requirements
+
+Use Tailwind CSS.
+
+The page should include:
+
+* Professional SaaS dashboard design
+* Good spacing
+* Rounded corners
+* Soft shadows
+* Subtle borders
+* Clear active tab state
+* Smooth hover effects
+* Responsive layout
+* Clean typography
+* Consistent colors
+
+Avoid adding unnecessary features.
 
 ---
 
 # Final Output Requirement
 
-Generate only the Analytics UI page.
+Generate only the **Teams Page UI**.
 
-Do not create backend.
-Do not create database.
-Do not add routing unless necessary.
-Do not add authentication.
-Do not add extra features.
+Do not create:
 
-The final result should be a polished, responsive Analytics dashboard UI for my project management application.
+* Backend
+* Database
+* API calls
+* Authentication logic
+* Real chat logic
+* Real video call logic
+* Socket.IO logic
+* WebRTC logic
+* Extra sidebar features
+* Extra tabs
+
+Use static data only and make the UI polished, responsive, and ready for future integration.
