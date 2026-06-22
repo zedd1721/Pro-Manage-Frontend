@@ -6,6 +6,7 @@ import {
   FolderKanban,
   Settings,
   LogOut,
+  Users,
 } from "lucide-react";
 import LogoutModal from "@/components/LogoutModal";
 import promanageLogo from "@/assets/promanage_logo.svg";
@@ -20,6 +21,7 @@ const navItems = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/analytics", label: "Analytics", icon: ChartNoAxesCombined },
   { to: "/projects", label: "Projects", icon: FolderKanban },
+  { to: "/teams", label: "Teams", icon: Users },
   { to: "/settings", label: "Settings", icon: Settings },
 ];
 

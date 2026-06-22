@@ -9,6 +9,7 @@ import { dashboardRoute } from "@/features/dashboard";
 import { landingRoute } from "@/features/landing";
 import { projectsRoute } from "@/features/projects";
 import { settingsRoute } from "@/features/settings";
+import { teamsRoute } from "@/features/teams";
 
 function NotFoundPage() {
   return (
@@ -36,6 +37,7 @@ const routeTree = rootRoute.addChildren([
   appLayoutRoute.addChildren([
     analyticsRoute,
     projectsRoute, 
+    teamsRoute,
     settingsRoute
   ]),
 ]);

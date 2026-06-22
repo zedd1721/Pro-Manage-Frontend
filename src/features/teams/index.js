@@ -1,0 +1,1 @@
+export { teamsRoute } from "./routes";
