@@ -7,7 +7,7 @@ function TeamsTabs({ active, onChange }) {
   ];
 
   return (
-    <div className="mt-6 flex w-fit items-center gap-1 rounded-xl border border-gray-100 bg-white p-1 shadow-sm">
+    <div className="flex w-fit items-center gap-1 rounded-xl border border-gray-100 bg-white p-1 shadow-sm">
       {tabs.map(({ id, label, icon: Icon }) => {
         const isActive = active === id;
 

@@ -1,8 +1,8 @@
-import { Trash2 } from "lucide-react";
+import { X } from "lucide-react";
 import { AVATAR_COLORS } from "@/features/teams/data/teamsData";
 import { getInitials } from "@/features/teams/utils/teamUtils";
 
-function MemberCard({ member, index }) {
+function MemberCard({ member, index, onRemove }) {
   const isOnline = member.status === "Online";
   const initials = getInitials(member.name);
 
@@ -32,10 +32,12 @@ function MemberCard({ member, index }) {
             </div>
             <button
               type="button"
-              className="flex-shrink-0 items-center gap-1 rounded-lg bg-red-50 px-2.5 py-1.5 text-[11px] font-semibold text-red-500 opacity-0 transition-colors group-hover:opacity-100 hover:bg-red-100"
+              onClick={onRemove}
+              className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-red-50 text-red-500 opacity-0 transition-colors group-hover:opacity-100 hover:bg-red-100"
+              aria-label={`Remove ${member.name}`}
+              title="Remove member"
             >
-              <Trash2 className="h-3 w-3" />
-              Remove
+              <X className="h-4 w-4" strokeWidth={2.4} />
             </button>
           </div>
 

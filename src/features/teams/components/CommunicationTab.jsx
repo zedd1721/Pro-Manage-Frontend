@@ -29,23 +29,37 @@ function CommunicationTab() {
     });
   }
 
-  function sendDM(id, text) {
+  function sendDM(id, text, replyTo) {
     setDmMessages((current) => ({
       ...current,
       [id]: [
         ...(current[id] ?? []),
-        { id: Date.now(), senderId: 0, text, time: now() },
+        { id: Date.now(), senderId: 0, text, time: now(), replyTo: replyTo ?? null },
       ],
     }));
   }
 
-  function sendGroup(id, text) {
+  function sendGroup(id, text, replyTo) {
     setGrpMessages((current) => ({
       ...current,
       [id]: [
         ...(current[id] ?? []),
-        { id: Date.now(), senderId: 0, text, time: now() },
+        { id: Date.now(), senderId: 0, text, time: now(), replyTo: replyTo ?? null },
       ],
+    }));
+  }
+
+  function deleteDMMessage(chatId, messageId) {
+    setDmMessages((current) => ({
+      ...current,
+      [chatId]: (current[chatId] ?? []).filter((message) => message.id !== messageId),
+    }));
+  }
+
+  function deleteGroupMessage(chatId, messageId) {
+    setGrpMessages((current) => ({
+      ...current,
+      [chatId]: (current[chatId] ?? []).filter((message) => message.id !== messageId),
     }));
   }
 
@@ -101,7 +115,8 @@ function CommunicationTab() {
         name={directMessage.name}
         status={directMessage.status}
         messages={dmMessages[directMessage.id] ?? []}
-        onSend={(text) => sendDM(directMessage.id, text)}
+        onSend={(text, replyTo) => sendDM(directMessage.id, text, replyTo)}
+        onDeleteMessage={(messageId) => deleteDMMessage(directMessage.id, messageId)}
         onBack={() => setActiveChat(null)}
       />
     );
@@ -124,7 +139,8 @@ function CommunicationTab() {
           name={group.name}
           groupMembers={membersInGroup}
           messages={grpMessages[group.id] ?? []}
-          onSend={(text) => sendGroup(group.id, text)}
+          onSend={(text, replyTo) => sendGroup(group.id, text, replyTo)}
+          onDeleteMessage={(messageId) => deleteGroupMessage(group.id, messageId)}
           onBack={() => setActiveChat(null)}
           onAddUser={() => setShowAddUser(true)}
         />

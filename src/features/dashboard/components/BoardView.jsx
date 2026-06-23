@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { ChevronDown, UserPlus } from "lucide-react";
 import AddTaskModal from "@/features/dashboard/components/AddTaskModal";
 import KanbanColumn from "@/features/dashboard/components/KanbanColumn";
 import { COLUMNS, SAMPLE_CARDS } from "@/features/dashboard/data/dashboardData";
 
 function BoardView() {
+  const navigate = useNavigate();
   const [filter, setFilter] = useState("This week");
   const [showAddTask, setShowAddTask] = useState(false);
   const [expandedCardId, setExpandedCardId] = useState(null);
@@ -45,6 +47,7 @@ function BoardView() {
           <div className="h-4 w-px bg-gray-200" />
           <button
             type="button"
+            onClick={() => navigate({ to: "/teams" })}
             className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-[12.5px] font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 hover:text-gray-900"
           >
             <UserPlus className="w-3.5 h-3.5" strokeWidth={1.8} />

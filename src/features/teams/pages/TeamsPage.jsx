@@ -11,10 +11,12 @@ function TeamsPage() {
     <div className="flex min-h-full flex-col">
       <TeamsHeader />
 
-      <div className="flex flex-1 flex-col gap-6 py-6">
-        <TeamsTabs active={activeTab} onChange={setActiveTab} />
-        <div className="transition-opacity duration-150">
-          {activeTab === "members" ? <MembersTab /> : <CommunicationTab />}
+      <div className="flex-1 overflow-auto pt-6">
+        <div className="flex flex-col gap-6 pb-6">
+          <TeamsTabs active={activeTab} onChange={setActiveTab} />
+          <div className="transition-opacity duration-150">
+            {activeTab === "members" ? <MembersTab /> : <CommunicationTab />}
+          </div>
         </div>
       </div>
     </div>

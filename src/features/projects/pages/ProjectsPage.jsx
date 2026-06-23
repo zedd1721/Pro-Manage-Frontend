@@ -1,15 +1,44 @@
+import { useState } from "react";
+import CreateProjectCard from "@/features/projects/components/CreateProjectCard";
+import CurrentProjectCard from "@/features/projects/components/CurrentProjectCard";
+import ProjectSection from "@/features/projects/components/ProjectSection";
+import ProjectsHeader from "@/features/projects/components/ProjectsHeader";
+import {
+  currentProject,
+  joinedProjects,
+  managedProjects,
+} from "@/features/projects/data/projectsData";
+
 function ProjectsPage() {
+  const [joined] = useState(joinedProjects);
+  const [managed] = useState(managedProjects);
+
   return (
-    <section className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-      <p className="text-xs font-semibold uppercase tracking-[0.25em] text-slate-400">
-        Sidebar Route
-      </p>
-      <h1 className="mt-3 text-3xl font-semibold text-slate-900">Projects</h1>
-      <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">
-        This is another child of the app layout. Only the main panel changes,
-        while the sidebar stays in place.
-      </p>
-    </section>
+    <div className="flex min-h-full flex-col">
+      <ProjectsHeader
+        totalProjects={joined.length + managed.length}
+        currentProjectName={currentProject.name}
+      />
+
+      <div className="flex-1 overflow-auto pt-6">
+        <div className="flex flex-col gap-7 pb-6">
+          <CurrentProjectCard project={currentProject} />
+          <CreateProjectCard />
+
+          <ProjectSection
+            title="Joined Projects"
+            subtitle="Projects where you are a team member."
+            projects={joined}
+          />
+
+          <ProjectSection
+            title="Managed Projects"
+            subtitle="Projects where you are the project manager."
+            projects={managed}
+          />
+        </div>
+      </div>
+    </div>
   );
 }
 
