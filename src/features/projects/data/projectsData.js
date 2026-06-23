@@ -18,9 +18,9 @@ export const managedProjects = [
 ];
 
 export const PROJECT_GRADIENTS = [
-  "from-violet-500 to-violet-600",
-  "from-sky-500 to-sky-600",
-  "from-emerald-500 to-emerald-600",
-  "from-amber-500 to-amber-600",
-  "from-pink-500 to-pink-600",
+  "from-[#d97706] to-[#f59e0b]",
+  "from-[#0f766e] to-[#14b8a6]",
+  "from-[#2563eb] to-[#60a5fa]",
+  "from-[#7c3aed] to-[#a78bfa]",
+  "from-[#db2777] to-[#f472b6]",
 ];

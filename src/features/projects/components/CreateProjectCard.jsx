@@ -2,43 +2,47 @@ import { Plus } from "lucide-react";
 
 function CreateProjectCard() {
   return (
-    <section className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm sm:p-6">
-      <div className="mb-1.5 flex items-center gap-2.5">
-        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-50">
-          <Plus className="h-4 w-4 text-blue-600" strokeWidth={2.2} />
+    <section className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+      <div className="mb-2 flex items-center gap-3">
+        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-100 to-cyan-50 text-sky-700">
+          <Plus className="h-4 w-4" strokeWidth={2.2} />
         </div>
-        <h3 className="text-[15px] font-bold text-gray-900">Create New Project</h3>
+        <div>
+          <h3 className="text-[18px] font-semibold tracking-tight text-slate-900">
+            Create New Project
+          </h3>
+          <p className="text-[12.5px] text-slate-500">
+            Start a smaller workspace with a clear purpose.
+          </p>
+        </div>
       </div>
-      <p className="mb-5 ml-9 text-[11.5px] text-gray-400">
-        Create a new workspace and invite your team later.
-      </p>
 
-      <div className="flex flex-col gap-4">
+      <div className="mt-6 flex flex-col gap-4">
         <div className="flex flex-col gap-1.5">
-          <label className="text-[11px] font-semibold uppercase tracking-widest text-gray-400">
+          <label className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
             Project Name
           </label>
           <input
             type="text"
             placeholder="My Awesome Project"
-            className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-[13.5px] text-gray-800 placeholder-gray-300 transition-all focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-50"
+            className="w-full rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-3 text-[14px] text-slate-800 placeholder-slate-300 transition-all focus:border-sky-400 focus:bg-white focus:outline-none focus:ring-4 focus:ring-sky-50"
           />
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <label className="text-[11px] font-semibold uppercase tracking-widest text-gray-400">
+          <label className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">
             Project Description
           </label>
           <textarea
-            rows={3}
+            rows={6}
             placeholder="Briefly describe what this project is about..."
-            className="w-full resize-none rounded-xl border border-gray-200 px-4 py-2.5 text-[13.5px] text-gray-800 placeholder-gray-300 transition-all focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-50"
+            className="w-full resize-none rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-3 text-[14px] text-slate-800 placeholder-slate-300 transition-all focus:border-sky-400 focus:bg-white focus:outline-none focus:ring-4 focus:ring-sky-50"
           />
         </div>
 
         <button
           type="button"
-          className="mt-1 flex items-center justify-center gap-2 rounded-xl bg-gray-900 py-2.5 text-[13.5px] font-semibold text-white shadow-sm transition-all hover:bg-gray-800"
+          className="mt-2 flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-sky-500 to-cyan-500 py-3 text-[14px] font-semibold text-white shadow-sm transition-all hover:from-sky-600 hover:to-cyan-600"
         >
           <Plus className="h-4 w-4" strokeWidth={2.2} />
           Create Project

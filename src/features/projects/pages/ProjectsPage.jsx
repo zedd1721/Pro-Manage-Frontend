@@ -21,21 +21,25 @@ function ProjectsPage() {
       />
 
       <div className="flex-1 overflow-auto pt-6">
-        <div className="flex flex-col gap-7 pb-6">
-          <CurrentProjectCard project={currentProject} />
-          <CreateProjectCard />
+        <div className="mx-auto flex w-full max-w-[1360px] flex-col gap-8 pb-8">
+          <section className="grid gap-6 xl:grid-cols-[minmax(0,1.35fr)_420px] xl:items-start">
+            <CurrentProjectCard project={currentProject} />
+            <CreateProjectCard />
+          </section>
 
-          <ProjectSection
-            title="Joined Projects"
-            subtitle="Projects where you are a team member."
-            projects={joined}
-          />
+          <section className="grid gap-8 xl:grid-cols-2 xl:items-start">
+            <ProjectSection
+              title="Managed Projects"
+              subtitle="Projects where you are the project manager."
+              projects={managed}
+            />
 
-          <ProjectSection
-            title="Managed Projects"
-            subtitle="Projects where you are the project manager."
-            projects={managed}
-          />
+            <ProjectSection
+              title="Joined Projects"
+              subtitle="Projects where you are a team member."
+              projects={joined}
+            />
+          </section>
         </div>
       </div>
     </div>

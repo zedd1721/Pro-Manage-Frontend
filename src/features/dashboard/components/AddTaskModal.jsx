@@ -359,7 +359,7 @@ export default function AddTaskModal({ onClose, onSave }) {
               <button
                 onClick={addChecklistItem}
                 disabled={!newItem.trim()}
-                className="w-9 h-9 flex-shrink-0 flex items-center justify-center rounded-xl bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm"
+                className="w-9 h-9 flex-shrink-0 flex items-center justify-center rounded-xl bg-gradient-to-r from-sky-500 to-cyan-500 text-white hover:from-sky-600 hover:to-cyan-600 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-sm"
               >
                 <Plus className="w-4 h-4" strokeWidth={2.5} />
               </button>
@@ -378,7 +378,7 @@ export default function AddTaskModal({ onClose, onSave }) {
           <button
             onClick={handleSave}
             disabled={!title.trim()}
-            className="flex-1 py-2.5 rounded-xl bg-gray-900 text-[13.5px] font-semibold text-white hover:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm"
+            className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-cyan-500 text-[13.5px] font-semibold text-white hover:from-sky-600 hover:to-cyan-600 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm"
           >
             Create Task
           </button>

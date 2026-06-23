@@ -35,27 +35,60 @@ function WelcomeCard({
   Icon,
   onSelect,
 }) {
+  const isCreate = id === "create";
+  const badges = isCreate
+    ? ["Name it", "Describe it", "Invite later"]
+    : ["Use code", "Join team", "Start working"];
+  const badgeLabel = isCreate ? "New Workspace" : "Quick Access";
+  const cardTitle = isCreate ? "Create Project" : "Join Project";
+  const cardDescription = isCreate
+    ? "Start a fresh workspace, name it clearly, and add context before inviting your team."
+    : "Use an invite code to enter an existing workspace and start collaborating right away.";
+
   return (
     <article
-      className="mx-auto flex aspect-square w-full max-w-[21.5rem] cursor-pointer flex-col items-center justify-center rounded-[1.65rem] border bg-white px-7 py-8 text-center shadow-[0_14px_35px_rgba(38,72,119,0.08)] transition-transform duration-200 hover:scale-[1.02]"
+      className={`mx-auto flex w-full max-w-[20.75rem] cursor-pointer flex-col rounded-[1.7rem] border px-6 py-7 text-left shadow-[0_14px_35px_rgba(38,72,119,0.08)] transition-transform duration-200 hover:scale-[1.02] ${
+        isCreate
+          ? "bg-[linear-gradient(160deg,#f7fbff_0%,#eef5ff_52%,#fdfefe_100%)]"
+          : "bg-[linear-gradient(160deg,#f4fffe_0%,#ebfbfb_55%,#ffffff_100%)]"
+      }`}
       style={{ borderColor: PANEL_BORDER }}
       onClick={() => onSelect(id)}
     >
-      <div
-        className="flex size-[5.8rem] items-center justify-center rounded-full"
-        style={{ background: iconBackground }}
-        aria-hidden="true"
-      >
-        <Icon className="size-9 stroke-[1.8]" style={{ color: accent }} />
+      <div className="flex items-start justify-between gap-4">
+        <div
+          className="flex size-[4rem] items-center justify-center rounded-[1.25rem] shadow-sm"
+          style={{ background: iconBackground }}
+          aria-hidden="true"
+        >
+          <Icon className="size-[1.65rem] stroke-[1.9]" style={{ color: accent }} />
+        </div>
+        <span className="rounded-full bg-white/80 px-3 py-1 text-[11px] font-semibold text-slate-500 shadow-sm">
+          {badgeLabel}
+        </span>
       </div>
 
-      <h2 className="mt-5 text-[1.7rem] font-semibold tracking-[-0.04em]" style={{ color: accent }}>
-        {title}
+      <h2
+        className="mt-6 text-[1.7rem] font-semibold tracking-[-0.05em]"
+        style={{ color: accent }}
+      >
+        {cardTitle}
       </h2>
 
-      <p className="mt-3 max-w-[14.5rem] text-[1rem] leading-7 text-slate-600">
-        {description}
+      <p className="mt-3 max-w-[14.8rem] text-[0.96rem] leading-6 text-slate-600">
+        {cardDescription}
       </p>
+
+      <div className="mt-6 flex flex-wrap gap-2">
+        {badges.map((item) => (
+          <span
+            key={item}
+            className="rounded-full bg-white/80 px-3 py-1.5 text-[11px] font-semibold text-slate-500 shadow-sm"
+          >
+            {item}
+          </span>
+        ))}
+      </div>
     </article>
   );
 }
@@ -63,12 +96,13 @@ function WelcomeCard({
 function WelcomeModal({ mode, onClose }) {
   const isCreate = mode === "create";
   const [value, setValue] = useState("");
+  const [description, setDescription] = useState("");
   const [error, setError] = useState("");
   const title = isCreate ? "Create Project" : "Join Project";
   const label = isCreate ? "Project Name" : "Enter Code";
   const placeholder = isCreate ? "Enter project name" : "Enter invite code";
   const helperText = isCreate
-    ? "Give your project a name. You can change it later."
+    ? "Give your project a clear name and a short description. You can refine both later."
     : "Enter the invite code to join an existing project.";
   const buttonText = isCreate ? "Create" : "Join";
   const buttonBackground = isCreate
@@ -124,6 +158,22 @@ function WelcomeModal({ mode, onClose }) {
           />
         </label>
 
+        {isCreate ? (
+          <label className="mt-5 block">
+            <span className="text-[1rem] font-semibold text-slate-800">
+              Project Description
+            </span>
+            <textarea
+              rows={4}
+              placeholder="Briefly describe what this project is about..."
+              value={description}
+              onChange={(event) => setDescription(event.target.value)}
+              className="mt-3 w-full resize-none rounded-[0.85rem] border px-4 py-3 text-[0.98rem] text-slate-800 outline-none transition focus:border-slate-300"
+              style={{ borderColor: "#e2e8f0" }}
+            />
+          </label>
+        ) : null}
+
         {error ? (
           <p className="mt-2 text-[0.88rem] font-medium text-red-500">{error}</p>
         ) : null}
@@ -155,10 +205,10 @@ function WelcomeOptions() {
       }}
     >
       <div
-        className="mx-auto flex min-h-full w-full max-w-[76.5rem] items-center justify-center rounded-[2rem] px-6 py-12 shadow-[0_24px_60px_rgba(46,86,140,0.12)] sm:px-10 lg:px-16 lg:py-16"
+        className="mx-auto flex min-h-full w-full max-w-[68rem] items-center justify-center rounded-[2rem] px-6 py-10 shadow-[0_24px_60px_rgba(46,86,140,0.12)] sm:px-8 lg:px-12 lg:py-12"
         style={{ backgroundColor: PANEL_BACKGROUND }}
       >
-        <div className="w-full max-w-[50rem]">
+        <div className="w-full max-w-[43rem]">
           <header className="text-center">
             <h1
               className="text-[clamp(1.85rem,3.3vw,2.95rem)] font-semibold tracking-[-0.05em]"
@@ -174,7 +224,7 @@ function WelcomeOptions() {
             </p>
           </header>
 
-          <div className="mt-10 grid gap-7 lg:mt-12 lg:grid-cols-2">
+          <div className="mt-8 grid gap-6 lg:mt-10 lg:grid-cols-2">
             {options.map((option) => (
               <WelcomeCard
                 key={option.id}
