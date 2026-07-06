@@ -4,6 +4,13 @@ const DEFAULT_RETRY_DELAY_MS = 500;
 
 const RETRYABLE_STATUS_CODES = new Set([408, 429, 502, 503, 504]);
 const IDEMPOTENT_METHODS = new Set(["GET", "PUT", "DELETE"]);
+const REFRESHABLE_AUTH_CODES = new Set([
+  "ACCESS_TOKEN_EXPIRED",
+  "ACCESS_TOKEN_MISSING",
+]);
+const REQUEST_END_REPORTED = Symbol("requestEndReported");
+const API_BASE_URL =
+  import.meta.env?.VITE_API_BASE_URL ?? "http://localhost:8080";
 
 const delay = (ms) => new Promise((resolve) => window.setTimeout(resolve, ms));
 
@@ -67,17 +74,24 @@ const createError = (message, input) => {
   return error;
 };
 
-const shouldRetryRequest = (method, status, attempt, retryCount, error) => {
+const shouldRetryRequest = (
+  method,
+  status,
+  attempt,
+  retryCount,
+  error,
+  retryUnsafeMethods,
+) => {
   if (attempt >= retryCount) {
+    return false;
+  }
+
+  if (!retryUnsafeMethods && !IDEMPOTENT_METHODS.has(method)) {
     return false;
   }
 
   if (error?.isTimeout || error?.isNetworkError) {
     return true;
-  }
-
-  if (!IDEMPOTENT_METHODS.has(method)) {
-    return false;
   }
 
   return RETRYABLE_STATUS_CODES.has(status);
@@ -103,7 +117,15 @@ const parseResponse = async (response, parseAs) => {
   const contentType = response.headers.get("content-type") ?? "";
 
   if (contentType.includes("application/json")) {
-    return response.json();
+    try {
+      return await response.json();
+    } catch {
+      throw createError("Failed to parse JSON response", {
+        status: response.status,
+        code: "PARSE_ERROR",
+        data: { contentType },
+      });
+    }
   }
 
   return response.text();
@@ -111,6 +133,17 @@ const parseResponse = async (response, parseAs) => {
 
 export const createFetchClient = (config) => {
   let refreshPromise = null;
+
+  const reportRequestEnd = (event) => {
+    config.onRequestEnd?.(event);
+
+    if (event.error && typeof event.error === "object") {
+      Object.defineProperty(event.error, REQUEST_END_REPORTED, {
+        value: true,
+        configurable: true,
+      });
+    }
+  };
 
   const runRefreshTokenFlow = async () => {
     if (!config.refreshPath) {
@@ -135,10 +168,12 @@ export const createFetchClient = (config) => {
       });
 
       if (!response.ok) {
+        const responseData = await parseResponse(response, "json");
+
         throw createError("Unable to refresh session", {
           status: response.status,
-          code: "AUTH_REFRESH_FAILED",
-          data: await parseResponse(response, "json"),
+          code: responseData?.code ?? "AUTH_REFRESH_FAILED",
+          data: responseData,
         });
       }
     } catch (error) {
@@ -181,6 +216,8 @@ export const createFetchClient = (config) => {
     const parseAs = options.parseAs ?? "json";
     const retryCount = options.retryCount ?? config.retryCount ?? DEFAULT_RETRY_COUNT;
     const timeoutMs = options.timeoutMs ?? config.timeoutMs ?? DEFAULT_TIMEOUT_MS;
+    const retryUnsafeMethods =
+      options.retryUnsafeMethods ?? config.retryUnsafeMethods ?? false;
     const url = buildUrl(config.baseUrl, path, options.query);
     const headers = new Headers(options.headers);
 
@@ -216,45 +253,113 @@ export const createFetchClient = (config) => {
         });
 
         if (response.status === 401 && !options.skipAuthRetry) {
-          await ensureRefreshed();
+          const responseData = await parseResponse(response, "json");
 
-          const retryResponse = await fetch(url, {
-            ...options,
-            method,
-            body,
-            headers,
-            credentials: "include",
-            signal: options.signal,
-          });
-
-          if (!retryResponse.ok) {
-            const retryError = createError("Request failed after refresh", {
-              status: retryResponse.status,
-              code: "HTTP_ERROR",
-              data: await parseResponse(retryResponse, "json"),
+          if (!REFRESHABLE_AUTH_CODES.has(responseData?.code)) {
+            const authError = createError("Request failed", {
+              status: response.status,
+              code: responseData?.code ?? "HTTP_ERROR",
+              data: responseData,
             });
 
-            config.onRequestEnd?.({
+            reportRequestEnd({
+              url,
+              method,
+              status: response.status,
+              ok: false,
+              error: authError,
+            });
+
+            throw authError;
+          }
+
+          await ensureRefreshed();
+
+          const retryTimeoutController = new AbortController();
+          const retryTimeoutId = window.setTimeout(
+            () => retryTimeoutController.abort(),
+            timeoutMs,
+          );
+          const retrySignal = mergeSignals(options.signal, retryTimeoutController.signal);
+
+          try {
+            const retryResponse = await fetch(url, {
+              ...options,
+              method,
+              body,
+              headers,
+              credentials: "include",
+              signal: retrySignal,
+            });
+
+            if (!retryResponse.ok) {
+              const retryResponseData = await parseResponse(retryResponse, "json");
+              const retryError = createError("Request failed after refresh", {
+                status: retryResponse.status,
+                code: retryResponseData?.code ?? "HTTP_ERROR",
+                data: retryResponseData,
+              });
+
+              reportRequestEnd({
+                url,
+                method,
+                status: retryResponse.status,
+                ok: false,
+                error: retryError,
+              });
+
+              throw retryError;
+            }
+
+            const parsedRetryResponse = await parseResponse(retryResponse, parseAs);
+
+            reportRequestEnd({
               url,
               method,
               status: retryResponse.status,
-              ok: false,
-              error: retryError,
+              ok: true,
             });
 
+            return parsedRetryResponse;
+          } catch (error) {
+            const isAbortError = error instanceof Error && error.name === "AbortError";
+            const wasCancelledByCaller =
+              isAbortError &&
+              options.signal?.aborted &&
+              !retryTimeoutController.signal.aborted;
+            const retryError = error?.code
+              ? error
+              : createError(
+                  wasCancelledByCaller
+                    ? "Request was cancelled"
+                    : isAbortError
+                      ? "Request timed out"
+                      : "Network request failed",
+                  {
+                    code: wasCancelledByCaller
+                      ? "REQUEST_ABORTED"
+                      : isAbortError
+                        ? "TIMEOUT"
+                        : "NETWORK_ERROR",
+                    isTimeout: isAbortError && !wasCancelledByCaller,
+                    isNetworkError: !isAbortError,
+                  },
+                );
+
+            if (!retryError[REQUEST_END_REPORTED]) {
+              reportRequestEnd({
+                url,
+                method,
+                status: retryError.status,
+                ok: false,
+                error: retryError,
+              });
+            }
+
             throw retryError;
+          } finally {
+            window.clearTimeout(retryTimeoutId);
           }
-
-          const parsedRetryResponse = await parseResponse(retryResponse, parseAs);
-
-          config.onRequestEnd?.({
-            url,
-            method,
-            status: retryResponse.status,
-            ok: true,
-          });
-
-          return parsedRetryResponse;
         }
 
         if (!response.ok) {
@@ -265,7 +370,7 @@ export const createFetchClient = (config) => {
             data: responseData,
           });
 
-          config.onRequestEnd?.({
+          reportRequestEnd({
             url,
             method,
             status: response.status,
@@ -273,7 +378,16 @@ export const createFetchClient = (config) => {
             error,
           });
 
-          if (shouldRetryRequest(method, response.status, attempt, retryCount)) {
+          if (
+            shouldRetryRequest(
+              method,
+              response.status,
+              attempt,
+              retryCount,
+              undefined,
+              retryUnsafeMethods,
+            )
+          ) {
             const backoffMs =
               (config.retryDelayMs ?? DEFAULT_RETRY_DELAY_MS) * 2 ** attempt;
             await delay(backoffMs);
@@ -285,7 +399,7 @@ export const createFetchClient = (config) => {
 
         const parsedResponse = await parseResponse(response, parseAs);
 
-        config.onRequestEnd?.({
+        reportRequestEnd({
           url,
           method,
           status: response.status,
@@ -295,26 +409,47 @@ export const createFetchClient = (config) => {
         return parsedResponse;
       } catch (error) {
         const isAbortError = error instanceof Error && error.name === "AbortError";
+        const wasCancelledByCaller =
+          isAbortError && options.signal?.aborted && !timeoutController.signal.aborted;
         const fetchError = error?.code
           ? error
           : createError(
-              isAbortError ? "Request timed out" : "Network request failed",
+              wasCancelledByCaller
+                ? "Request was cancelled"
+                : isAbortError
+                  ? "Request timed out"
+                  : "Network request failed",
               {
-                code: isAbortError ? "TIMEOUT" : "NETWORK_ERROR",
-                isTimeout: isAbortError,
+                code: wasCancelledByCaller
+                  ? "REQUEST_ABORTED"
+                  : isAbortError
+                    ? "TIMEOUT"
+                    : "NETWORK_ERROR",
+                isTimeout: isAbortError && !wasCancelledByCaller,
                 isNetworkError: !isAbortError,
               },
             );
 
-        config.onRequestEnd?.({
-          url,
-          method,
-          status: fetchError.status,
-          ok: false,
-          error: fetchError,
-        });
+        if (!fetchError[REQUEST_END_REPORTED]) {
+          reportRequestEnd({
+            url,
+            method,
+            status: fetchError.status,
+            ok: false,
+            error: fetchError,
+          });
+        }
 
-        if (shouldRetryRequest(method, fetchError.status, attempt, retryCount, fetchError)) {
+        if (
+          shouldRetryRequest(
+            method,
+            fetchError.status,
+            attempt,
+            retryCount,
+            fetchError,
+            retryUnsafeMethods,
+          )
+        ) {
           const backoffMs =
             (config.retryDelayMs ?? DEFAULT_RETRY_DELAY_MS) * 2 ** attempt;
           await delay(backoffMs);
@@ -343,7 +478,7 @@ export const createFetchClient = (config) => {
 };
 
 export const fetchClient = createFetchClient({
-  baseUrl: "http://localhost:8080",
+  baseUrl: API_BASE_URL,
   refreshPath: "/api/auth/refresh-token",
   timeoutMs: 10_000,
   retryCount: 2,
