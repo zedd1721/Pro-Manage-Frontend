@@ -20,14 +20,14 @@ function RegisterPage() {
         {
           id: "register-confirm-password",
           type: "password",
-          placeholder: "Confirm Password",
+          placeholder: "Password",
           icon: "lock",
           hasEye: true,
         },
         {
           id: "register-password",
           type: "password",
-          placeholder: "Password",
+          placeholder: "Confirm Password",
           icon: "lock",
           hasEye: true,
         },

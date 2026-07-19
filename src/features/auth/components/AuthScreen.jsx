@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Eye, LockKeyhole, Mail, UserRound } from "lucide-react";
+import { Eye, EyeOff, LockKeyhole, Mail, UserRound } from "lucide-react";
 import loginPageImage from "@/assets/Login_page.png";
 
 const PRIMARY = "#17A2B8";
@@ -9,9 +9,11 @@ const BORDER = "#d4d4d8";
 const TEXT = "#343434";
 const MUTED = "#8b8b8b";
 
-function EyeIcon() {
+function EyeIcon({ isVisible }) {
+  const Icon = isVisible ? EyeOff : Eye;
+
   return (
-    <Eye className="size-4 stroke-[1.75] sm:size-4.5" aria-hidden="true" />
+    <Icon className="size-4 stroke-[1.75] sm:size-4.5" aria-hidden="true" />
   );
 }
 
@@ -53,7 +55,11 @@ function AuthField({
   value,
   error,
   onChange,
+  isPasswordVisible,
+  onTogglePassword,
 }) {
+  const inputType = hasEye && isPasswordVisible ? "text" : type;
+
   return (
     <div>
       <label
@@ -68,7 +74,7 @@ function AuthField({
         </span>
         <input
           id={id}
-          type={type}
+          type={inputType}
           placeholder={placeholder}
           aria-label={placeholder}
           value={value}
@@ -76,9 +82,15 @@ function AuthField({
           className="min-w-0 flex-1 bg-transparent text-[0.9rem] font-light text-(--auth-text) outline-none placeholder:text-(--auth-muted) sm:text-[0.95rem]"
         />
         {hasEye ? (
-          <span className="shrink-0" aria-hidden="true">
-            <EyeIcon />
-          </span>
+          <button
+            type="button"
+            onClick={() => onTogglePassword(id)}
+            className="shrink-0 cursor-pointer rounded-full p-1 transition hover:bg-slate-100 hover:text-slate-700"
+            aria-label={isPasswordVisible ? "Hide password" : "Show password"}
+            aria-pressed={isPasswordVisible}
+          >
+            <EyeIcon isVisible={isPasswordVisible} />
+          </button>
         ) : null}
       </label>
 
@@ -106,6 +118,7 @@ function AuthScreen({
     Object.fromEntries(fields.map((field) => [field.id, ""])),
   );
   const [errors, setErrors] = useState({});
+  const [visiblePasswords, setVisiblePasswords] = useState({});
 
   function handleChange(id, nextValue) {
     setValues((currentValues) => ({
@@ -122,6 +135,13 @@ function AuthScreen({
       delete nextErrors[id];
       return nextErrors;
     });
+  }
+
+  function handleTogglePassword(id) {
+    setVisiblePasswords((currentVisiblePasswords) => ({
+      ...currentVisiblePasswords,
+      [id]: !currentVisiblePasswords[id],
+    }));
   }
 
   function handleSubmit(event) {
@@ -212,6 +232,8 @@ function AuthScreen({
                   value={values[field.id] ?? ""}
                   error={errors[field.id]}
                   onChange={handleChange}
+                  isPasswordVisible={Boolean(visiblePasswords[field.id])}
+                  onTogglePassword={handleTogglePassword}
                 />
               ))}
 

@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Plus, UsersRound, X } from "lucide-react";
+import { useCreateProject } from "../../hooks/useCreateProject";
+import { useJoinProject } from "../../hooks/useJoinProject";
 
 const PAGE_BACKGROUND = "#e6effc";
 const PANEL_BACKGROUND = "#ffffff";
@@ -28,8 +30,6 @@ const options = [
 
 function WelcomeCard({
   id,
-  title,
-  description,
   accent,
   iconBackground,
   Icon,
@@ -47,7 +47,7 @@ function WelcomeCard({
 
   return (
     <article
-      className={`mx-auto flex w-full max-w-[20.75rem] cursor-pointer flex-col rounded-[1.7rem] border px-6 py-7 text-left shadow-[0_14px_35px_rgba(38,72,119,0.08)] transition-transform duration-200 hover:scale-[1.02] ${
+      className={`mx-auto flex w-full max-w-83 cursor-pointer flex-col rounded-[1.7rem] border px-6 py-7 text-left shadow-[0_14px_35px_rgba(38,72,119,0.08)] transition-transform duration-200 hover:scale-[1.02] ${
         isCreate
           ? "bg-[linear-gradient(160deg,#f7fbff_0%,#eef5ff_52%,#fdfefe_100%)]"
           : "bg-[linear-gradient(160deg,#f4fffe_0%,#ebfbfb_55%,#ffffff_100%)]"
@@ -57,11 +57,14 @@ function WelcomeCard({
     >
       <div className="flex items-start justify-between gap-4">
         <div
-          className="flex size-[4rem] items-center justify-center rounded-[1.25rem] shadow-sm"
+          className="flex size-16 items-center justify-center rounded-[1.25rem] shadow-sm"
           style={{ background: iconBackground }}
           aria-hidden="true"
         >
-          <Icon className="size-[1.65rem] stroke-[1.9]" style={{ color: accent }} />
+          <Icon
+            className="size-[1.65rem] stroke-[1.9]"
+            style={{ color: accent }}
+          />
         </div>
         <span className="rounded-full bg-white/80 px-3 py-1 text-[11px] font-semibold text-slate-500 shadow-sm">
           {badgeLabel}
@@ -69,7 +72,7 @@ function WelcomeCard({
       </div>
 
       <h2
-        className="mt-6 text-[1.7rem] font-semibold tracking-[-0.05em]"
+        className="mt-6 text-[1.7rem] font-semibold tracking-tighter"
         style={{ color: accent }}
       >
         {cardTitle}
@@ -94,6 +97,8 @@ function WelcomeCard({
 }
 
 function WelcomeModal({ mode, onClose }) {
+  const createProjectMutation = useCreateProject();
+  const joinProjectMutation = useJoinProject();
   const isCreate = mode === "create";
   const [value, setValue] = useState("");
   const [description, setDescription] = useState("");
@@ -116,19 +121,35 @@ function WelcomeModal({ mode, onClose }) {
       setError(
         isCreate
           ? "Please enter a project name."
-          : "Please enter an invite code."
+          : "Please enter an invite code.",
       );
       return;
     }
 
     setError("");
+
+    if (isCreate) {
+      createProjectMutation.mutate({
+        name: trimmedValue,
+        description: description.trim(),
+      });
+      return;
+    }
+
+    joinProjectMutation.mutate({
+      inviteCode: trimmedValue,
+    });
   }
+
+  const isSubmitting = isCreate
+    ? createProjectMutation.isPending
+    : joinProjectMutation.isPending;
 
   return (
     <div className="fixed inset-0 z-20 flex items-center justify-center bg-slate-900/15 px-4 backdrop-blur-[2px]">
       <div className="w-full max-w-[24rem] rounded-[1.25rem] border border-slate-200 bg-white p-8 shadow-[0_22px_60px_rgba(15,23,42,0.18)]">
         <div className="flex items-start justify-between gap-4">
-          <h2 className="text-[2rem] font-semibold tracking-[-0.05em] text-[color:var(--welcome-title)]">
+          <h2 className="text-[2rem] font-semibold tracking-tighter text-(--welcome-title)">
             {title}
           </h2>
           <button
@@ -137,12 +158,14 @@ function WelcomeModal({ mode, onClose }) {
             className="cursor-pointer rounded-full p-1 text-slate-500 transition hover:bg-slate-100 hover:text-slate-700"
             aria-label="Close modal"
           >
-            <X className="size-6 stroke-[2]" />
+            <X className="size-6 stroke-2" />
           </button>
         </div>
 
         <label className="mt-7 block">
-          <span className="text-[1rem] font-semibold text-slate-800">{label}</span>
+          <span className="text-[1rem] font-semibold text-slate-800">
+            {label}
+          </span>
           <input
             type="text"
             placeholder={placeholder}
@@ -175,18 +198,36 @@ function WelcomeModal({ mode, onClose }) {
         ) : null}
 
         {error ? (
-          <p className="mt-2 text-[0.88rem] font-medium text-red-500">{error}</p>
+          <p className="mt-2 text-[0.88rem] font-medium text-red-500">
+            {error}
+          </p>
         ) : null}
 
-        <p className="mt-4 text-[0.92rem] leading-7 text-slate-500">{helperText}</p>
+        {createProjectMutation.error || joinProjectMutation.error ? (
+          <p className="mt-2 text-[0.88rem] font-medium text-red-500">
+            {createProjectMutation.error?.data?.message ||
+              joinProjectMutation.error?.data?.message ||
+              createProjectMutation.error?.message ||
+              joinProjectMutation.error?.message}
+          </p>
+        ) : null}
+
+        <p className="mt-4 text-[0.92rem] leading-7 text-slate-500">
+          {helperText}
+        </p>
 
         <button
           type="button"
           onClick={handleSubmit}
-          className="mt-7 w-full cursor-pointer rounded-[0.9rem] px-6 py-3.5 text-[1rem] font-semibold text-white shadow-[0_12px_25px_rgba(58,98,170,0.16)]"
+          disabled={isSubmitting}
+          className="mt-7 w-full cursor-pointer rounded-[0.9rem] px-6 py-3.5 text-[1rem] font-semibold text-white shadow-[0_12px_25px_rgba(58,98,170,0.16)] disabled:cursor-not-allowed disabled:opacity-70"
           style={{ background: buttonBackground }}
         >
-          {buttonText}
+          {isSubmitting
+            ? isCreate
+              ? "Creating..."
+              : "Joining..."
+            : buttonText}
         </button>
       </div>
     </div>
@@ -205,13 +246,13 @@ function WelcomeOptions() {
       }}
     >
       <div
-        className="mx-auto flex min-h-full w-full max-w-[68rem] items-center justify-center rounded-[2rem] px-6 py-10 shadow-[0_24px_60px_rgba(46,86,140,0.12)] sm:px-8 lg:px-12 lg:py-12"
+        className="mx-auto flex min-h-full w-full max-w-272 items-center justify-center rounded-4xl px-6 py-10 shadow-[0_24px_60px_rgba(46,86,140,0.12)] sm:px-8 lg:px-12 lg:py-12"
         style={{ backgroundColor: PANEL_BACKGROUND }}
       >
-        <div className="w-full max-w-[43rem]">
+        <div className="w-full max-w-172">
           <header className="text-center">
             <h1
-              className="text-[clamp(1.85rem,3.3vw,2.95rem)] font-semibold tracking-[-0.05em]"
+              className="text-[clamp(1.85rem,3.3vw,2.95rem)] font-semibold tracking-tighter"
               style={{ color: TITLE_COLOR }}
             >
               What would you like to do?
