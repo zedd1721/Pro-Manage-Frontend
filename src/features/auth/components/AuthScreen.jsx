@@ -10,7 +10,9 @@ const TEXT = "#343434";
 const MUTED = "#8b8b8b";
 
 function EyeIcon() {
-  return <Eye className="size-4 stroke-[1.75] sm:size-4.5" aria-hidden="true" />;
+  return (
+    <Eye className="size-4 stroke-[1.75] sm:size-4.5" aria-hidden="true" />
+  );
 }
 
 function AstronautIllustration() {
@@ -30,21 +32,33 @@ function AstronautIllustration() {
 }
 
 function FieldIcon({ icon }) {
-  const Icon = {
-    user: UserRound,
-    lock: LockKeyhole,
-    mail: Mail,
-  }[icon] ?? Mail;
+  const Icon =
+    {
+      user: UserRound,
+      lock: LockKeyhole,
+      mail: Mail,
+    }[icon] ?? Mail;
 
-  return <Icon className="size-4 stroke-[1.75] sm:size-4.5" aria-hidden="true" />;
+  return (
+    <Icon className="size-4 stroke-[1.75] sm:size-4.5" aria-hidden="true" />
+  );
 }
 
-function AuthField({ id, placeholder, type, icon, hasEye, value, error, onChange }) {
+function AuthField({
+  id,
+  placeholder,
+  type,
+  icon,
+  hasEye,
+  value,
+  error,
+  onChange,
+}) {
   return (
     <div>
       <label
         htmlFor={id}
-        className="flex items-center gap-2.5 rounded-[1rem] border bg-white px-3 py-3 text-[color:var(--auth-muted)] shadow-[0_0_0_1px_rgba(0,0,0,0.015)] sm:gap-3 sm:px-3.5 sm:py-3.5"
+        className="flex items-center gap-2.5 rounded-2xl border bg-white px-3 py-3 text-(--auth-muted) shadow-[0_0_0_1px_rgba(0,0,0,0.015)] sm:gap-3 sm:px-3.5 sm:py-3.5"
         style={{
           borderColor: error ? "#ef4444" : "var(--auth-border)",
         }}
@@ -59,7 +73,7 @@ function AuthField({ id, placeholder, type, icon, hasEye, value, error, onChange
           aria-label={placeholder}
           value={value}
           onChange={(event) => onChange(id, event.target.value)}
-          className="min-w-0 flex-1 bg-transparent text-[0.9rem] font-light text-[color:var(--auth-text)] outline-none placeholder:text-[color:var(--auth-muted)] sm:text-[0.95rem]"
+          className="min-w-0 flex-1 bg-transparent text-[0.9rem] font-light text-(--auth-text) outline-none placeholder:text-(--auth-muted) sm:text-[0.95rem]"
         />
         {hasEye ? (
           <span className="shrink-0" aria-hidden="true">
@@ -69,7 +83,9 @@ function AuthField({ id, placeholder, type, icon, hasEye, value, error, onChange
       </label>
 
       {error ? (
-        <p className="mt-1.5 px-1 text-[0.83rem] font-medium text-red-500">{error}</p>
+        <p className="mt-1.5 px-1 text-[0.83rem] font-medium text-red-500">
+          {error}
+        </p>
       ) : null}
     </div>
   );
@@ -82,9 +98,12 @@ function AuthScreen({
   switchPrompt,
   switchText,
   switchTo,
+  onSubmit,
+  isSubmitting = false,
+  serverError,
 }) {
   const [values, setValues] = useState(() =>
-    Object.fromEntries(fields.map((field) => [field.id, ""]))
+    Object.fromEntries(fields.map((field) => [field.id, ""])),
   );
   const [errors, setErrors] = useState({});
 
@@ -137,6 +156,12 @@ function AuthScreen({
     }
 
     setErrors(nextErrors);
+
+    if (Object.keys(nextErrors).length > 0) {
+      return;
+    }
+
+    onSubmit?.(values);
   }
 
   return (
@@ -154,10 +179,11 @@ function AuthScreen({
       <div
         className="grid min-h-svh"
         style={{
-          gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 22rem), 1fr))",
+          gridTemplateColumns:
+            "repeat(auto-fit, minmax(min(100%, 22rem), 1fr))",
         }}
       >
-        <aside className="flex min-h-[34svh] items-center justify-center overflow-hidden bg-[color:var(--auth-primary)] px-[4vw] py-[3svh] text-center text-white">
+        <aside className="flex min-h-[34svh] items-center justify-center overflow-hidden bg-(--auth-primary) px-[4vw] py-[3svh] text-center text-white">
           <div className="flex w-full flex-col items-center justify-center gap-[1.1svh]">
             <AstronautIllustration />
             <h2 className="whitespace-nowrap text-[clamp(1.15rem,2vw,2rem)] font-light tracking-[-0.04em]">
@@ -170,12 +196,15 @@ function AuthScreen({
         </aside>
 
         <main className="flex items-center justify-center bg-white px-[4vw] py-[3svh]">
-          <div className="w-full max-w-[27rem]">
-            <h1 className="text-center text-[clamp(1.55rem,3vw,2.35rem)] font-semibold tracking-[-0.04em] text-[color:var(--auth-text)]">
+          <div className="w-full max-w-108">
+            <h1 className="text-center text-[clamp(1.55rem,3vw,2.35rem)] font-semibold tracking-[-0.04em] text-(--auth-text)">
               {title}
             </h1>
 
-            <form className="mt-[2.2svh] space-y-[1.1svh]" onSubmit={handleSubmit}>
+            <form
+              className="mt-[2.2svh] space-y-[1.1svh]"
+              onSubmit={handleSubmit}
+            >
               {fields.map((field) => (
                 <AuthField
                   key={field.id}
@@ -186,8 +215,15 @@ function AuthScreen({
                 />
               ))}
 
+              {serverError ? (
+                <p className="rounded-xl bg-red-50 px-3 py-2 text-[0.85rem] font-medium text-red-600">
+                  {serverError}
+                </p>
+              ) : null}
+
               <button
                 type="submit"
+                disabled={isSubmitting}
                 className="mt-[1.4svh] w-full rounded-full bg-(--auth-primary) px-4 py-3 text-[0.92rem] font-medium text-white transition hover:brightness-[1.03] sm:py-3.5 sm:text-[0.98rem]"
               >
                 {submitText}
@@ -200,7 +236,7 @@ function AuthScreen({
 
             <Link
               to={switchTo}
-              className="mt-[1.4svh] flex w-full items-center justify-center rounded-full border border-[color:var(--auth-primary)] px-4 py-3 text-[0.92rem] font-medium text-[color:var(--auth-primary)] transition hover:bg-[color:var(--auth-primary)]/5 sm:py-3.5 sm:text-[0.98rem]"
+              className="mt-[1.4svh] flex w-full items-center justify-center rounded-full border border-(--auth-primary) px-4 py-3 text-[0.92rem] font-medium text-(--auth-primary) transition hover:bg-(--auth-primary)/5 sm:py-3.5 sm:text-[0.98rem]"
             >
               {switchText}
             </Link>

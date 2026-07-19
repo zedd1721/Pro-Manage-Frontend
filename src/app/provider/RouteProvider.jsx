@@ -19,7 +19,7 @@ const queryClient = new QueryClient({
 const AppRouterProvider = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />{" "}
+      <RouterProvider router={router} />
     </QueryClientProvider>
   );
 };

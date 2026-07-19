@@ -1,6 +1,15 @@
 import AuthScreen from "../components/AuthScreen";
+import { useLogin } from "../hooks/useLogin";
 
 function LoginPage() {
+  const loginMutation = useLogin();
+
+  function handleLogin(values) {
+    loginMutation.mutate({
+      email: values["login-email"].trim(),
+      password: values["login-password"],
+    })
+  }
   return (
     <AuthScreen
       title="Login"
@@ -18,6 +27,9 @@ function LoginPage() {
       switchPrompt="Have no account yet?"
       switchText="Register"
       switchTo="/register"
+      onSubmit={handleLogin}
+      isSubmitting={loginMutation.isPending}
+      serverError={loginMutation.error?.data?.message || loginMutation.error?.message}
     />
   );
 }
