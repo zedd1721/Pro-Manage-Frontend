@@ -8,15 +8,13 @@ import { getMe } from "@/features/auth/api/auth";
 const redirectLoggedInUser = async () => {
   try {
     await getMe();
-
-    throw redirect({
-      to: "/dashboard",
-    });
-  } catch (error) {
-    if (error?.isRedirect) {
-      throw error;
-    }
+  } catch {
+    return;
   }
+
+  throw redirect({
+    to: "/dashboard",
+  });
 };
 
 const authLayoutRoute = createRoute({
