@@ -239,7 +239,7 @@ function WelcomeOptions() {
 
   return (
     <section
-      className="fixed inset-0 overflow-y-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-12"
+      className="kanban-scroll fixed inset-0 overflow-y-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-12"
       style={{
         backgroundColor: PAGE_BACKGROUND,
         "--welcome-title": TITLE_COLOR,

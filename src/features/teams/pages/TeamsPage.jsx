@@ -8,10 +8,10 @@ function TeamsPage() {
   const [activeTab, setActiveTab] = useState("members");
 
   return (
-    <div className="flex min-h-full flex-col">
+    <div className="flex h-full min-h-0 flex-col">
       <TeamsHeader />
 
-      <div className="flex-1 overflow-auto pt-6">
+      <div className="kanban-scroll -mx-6 min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-6 pt-6 md:-mx-8 md:px-8">
         <div className="flex flex-col gap-6 pb-6">
           <TeamsTabs active={activeTab} onChange={setActiveTab} />
           <div className="transition-opacity duration-150">

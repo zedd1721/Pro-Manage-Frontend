@@ -30,11 +30,11 @@ function NotFoundPage() {
 
 const routeTree = rootRoute.addChildren([
   landingRoute,
-  dashboardRoute,
   fullPageLayoutRoute.addChildren([
     authRoutes
   ]),
   appLayoutRoute.addChildren([
+    dashboardRoute,
     analyticsRoute,
     projectsRoute, 
     teamsRoute,

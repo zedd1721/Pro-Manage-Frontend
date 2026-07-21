@@ -112,7 +112,7 @@ export default function AddTaskModal({ onClose, onSave }) {
         </div>
 
         {/* Body */}
-        <div className="px-6 py-5 flex flex-col gap-5 overflow-y-auto max-h-[72vh]">
+        <div className="kanban-scroll px-6 py-5 flex flex-col gap-5 overflow-y-auto max-h-[72vh]">
 
           {/* Task name */}
           <div className="flex flex-col gap-1.5">

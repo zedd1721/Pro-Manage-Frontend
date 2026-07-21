@@ -93,6 +93,72 @@ const membersAnalytics = [
     backlogTasks: 1,
     accent: "from-emerald-500 to-teal-600",
   },
+  {
+    id: 5,
+    name: "Kunal Rao",
+    role: "Project Manager",
+    assignedTasks: 10,
+    pendingTasks: 2,
+    inProgressTasks: 3,
+    completedTasks: 5,
+    backlogTasks: 0,
+    accent: "from-blue-500 to-cyan-600",
+  },
+  {
+    id: 6,
+    name: "Sneha Kapoor",
+    role: "Product Designer",
+    assignedTasks: 8,
+    pendingTasks: 1,
+    inProgressTasks: 3,
+    completedTasks: 3,
+    backlogTasks: 1,
+    accent: "from-fuchsia-500 to-pink-600",
+  },
+  {
+    id: 7,
+    name: "Vikram Joshi",
+    role: "DevOps Engineer",
+    assignedTasks: 11,
+    pendingTasks: 3,
+    inProgressTasks: 4,
+    completedTasks: 4,
+    backlogTasks: 0,
+    accent: "from-amber-500 to-orange-600",
+  },
+  {
+    id: 8,
+    name: "Isha Nair",
+    role: "Business Analyst",
+    assignedTasks: 7,
+    pendingTasks: 2,
+    inProgressTasks: 1,
+    completedTasks: 3,
+    backlogTasks: 1,
+    accent: "from-indigo-500 to-blue-600",
+  },
+  {
+    id: 9,
+    name: "Manav Patel",
+    role: "Backend Developer",
+    assignedTasks: 14,
+    pendingTasks: 4,
+    inProgressTasks: 5,
+    completedTasks: 4,
+    backlogTasks: 1,
+    accent: "from-slate-600 to-gray-800",
+  },
+  {
+    id: 10,
+    name: "Tara D'Souza",
+    role: "QA Automation",
+    assignedTasks: 9,
+    pendingTasks: 1,
+    inProgressTasks: 2,
+    completedTasks: 6,
+    backlogTasks: 0,
+    accent: "from-teal-500 to-emerald-600",
+  },
 ];
 
 const memberStatConfig = [
@@ -210,7 +276,7 @@ function MemberCard({ member }) {
 function AnalyticsPage() {
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <header className="-mx-6 -mt-6 border-b border-gray-100 bg-white px-6 py-4 md:-mx-8 md:-mt-8 md:px-8">
+      <header className="shrink-0 -mx-6 -mt-6 border-b border-gray-100 bg-white px-6 py-4 md:-mx-8 md:-mt-8 md:px-8">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
             <h1 className="text-[18px] font-bold tracking-tight text-slate-900">
@@ -251,7 +317,7 @@ function AnalyticsPage() {
         </div>
       </header>
 
-      <div className="flex-1 overflow-auto pt-6">
+      <div className="kanban-scroll -mx-6 min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-6 pt-6 md:-mx-8 md:px-8">
         <section className="space-y-6">
           <ProjectOverviewCard />
 

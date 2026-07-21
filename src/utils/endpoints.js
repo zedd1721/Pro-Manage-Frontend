@@ -5,6 +5,7 @@ export const ENDPOINTS = {
   login: "/api/auth/login",
   logout: "/api/auth/logout",
   refreshToken: "/api/auth/refresh-token",
+  me:"/api/auth/me",
 
   createProject: "/api/invite/create-project",
   inviteMember: "/api/invite/invite-member",

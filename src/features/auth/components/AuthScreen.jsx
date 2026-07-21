@@ -186,7 +186,7 @@ function AuthScreen({
 
   return (
     <section
-      className="fixed inset-0 z-10 overflow-y-auto bg-white lg:overflow-hidden"
+      className="kanban-scroll fixed inset-0 z-10 overflow-y-auto bg-white lg:overflow-hidden"
       style={{
         fontFamily: '"Avenir Next", "Trebuchet MS", "Segoe UI", sans-serif',
         "--auth-primary": PRIMARY,

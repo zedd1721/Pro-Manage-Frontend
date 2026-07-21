@@ -77,7 +77,7 @@ function AddUserToGroupModal({ groupName, existingIds, onAdd, onClose }) {
           </div>
         </div>
 
-        <div className="flex max-h-[320px] flex-1 flex-col gap-1.5 overflow-y-auto px-5 pb-2">
+        <div className="kanban-scroll flex max-h-[320px] flex-1 flex-col gap-1.5 overflow-y-auto px-5 pb-2">
           {filtered.length === 0 ? (
             <div className="py-8 text-center text-[13px] text-gray-400">
               No users found to add.

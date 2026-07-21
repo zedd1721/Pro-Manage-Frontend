@@ -109,10 +109,10 @@ function SettingsPage() {
     .toUpperCase();
 
   return (
-    <div className="flex min-h-full flex-col">
+    <div className="flex h-full min-h-0 flex-col">
       <SettingsHeader />
 
-      <div className="flex flex-1 flex-col gap-6 py-6">
+      <div className="kanban-scroll -mx-6 flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto overflow-x-hidden px-6 py-6 md:-mx-8 md:px-8">
         <section className="grid gap-6 xl:grid-cols-[320px_1fr]">
           <article className="overflow-hidden rounded-[26px] border border-slate-200 bg-white shadow-sm">
             <div className="bg-gradient-to-br from-sky-500 via-sky-400 to-cyan-300 px-6 py-6 text-white">

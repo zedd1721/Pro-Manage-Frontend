@@ -14,14 +14,14 @@ function ProjectsPage() {
   const [managed] = useState(managedProjects);
 
   return (
-    <div className="flex min-h-full flex-col">
+    <div className="flex h-full min-h-0 flex-col">
       <ProjectsHeader
         totalProjects={joined.length + managed.length}
         currentProjectName={currentProject.name}
       />
 
-      <div className="flex-1 overflow-auto pt-6">
-        <div className="mx-auto flex w-full max-w-[1360px] flex-col gap-8 pb-8">
+      <div className="kanban-scroll -mx-6 min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-6 pt-6 md:-mx-8 md:px-8">
+        <div className="mx-auto flex w-full max-w-340 flex-col gap-8 pb-8">
           <section className="grid gap-6 xl:grid-cols-[minmax(0,1.35fr)_420px] xl:items-start">
             <CurrentProjectCard project={currentProject} />
             <CreateProjectCard />

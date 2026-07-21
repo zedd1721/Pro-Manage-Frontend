@@ -97,7 +97,7 @@ function CreateGroupModal({ onClose, onCreate }) {
               <Users className="h-3.5 w-3.5" />
               Add Members
             </label>
-            <div className="flex max-h-[220px] flex-col gap-2 overflow-y-auto pr-1">
+            <div className="kanban-scroll flex max-h-[220px] flex-col gap-2 overflow-y-auto pr-1">
               {members.map((member) => {
                 const isSelected = selectedMembers.some((item) => item.id === member.id);
                 const isOnline = member.status === "Online";

@@ -5,12 +5,12 @@ import { rootRoute } from "@/app/router/rootRoute";
 
 function AppLayout() {
   return (
-    <div className="min-h-screen bg-slate-100 text-slate-900 md:grid md:grid-cols-[200px_1fr]">
-      <aside className="border-b border-gray-100 bg-white md:border-b-0 md:border-r">
+    <div className="h-screen overflow-hidden bg-slate-100 text-slate-900 md:grid md:grid-cols-[200px_1fr]">
+      <aside className="h-screen border-b border-gray-100 bg-white md:border-b-0 md:border-r">
         <SideBar />
       </aside>
 
-      <main className="min-w-0 p-6 md:p-8">
+      <main className="min-h-0 min-w-0 overflow-hidden p-6 md:p-8">
         <Outlet />
       </main>
     </div>
