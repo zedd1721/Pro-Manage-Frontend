@@ -22,15 +22,12 @@ export const appLayoutRoute = createRoute({
   getParentRoute: () => rootRoute,
   id: "app-layout",
 
-  beforeLoad: async ({ location }) => {
+  beforeLoad: async () => {
     try {
       await getMe();
     } catch {
       throw redirect({
         to: "/login",
-        search: {
-          redirect: location.href,
-        },
       });
     }
   },
