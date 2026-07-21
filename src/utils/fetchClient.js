@@ -483,7 +483,4 @@ export const fetchClient = createFetchClient({
   timeoutMs: 10_000,
   retryCount: 2,
   retryDelayMs: 500,
-  onAuthFailure: () => {
-    window.location.href = "/login";
-  }
 });

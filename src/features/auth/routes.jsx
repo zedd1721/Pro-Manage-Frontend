@@ -39,6 +39,15 @@ const registerRoute = createRoute({
 
 const welcomeRoute = createRoute({
   getParentRoute: () => authLayoutRoute,
+  beforeLoad: async () => {
+    try {
+      await getMe();
+    } catch {
+      throw redirect({
+        to: "/login",
+      });
+    }
+  },
   path: "/welcome",
   component: WelcomePage,
 });
