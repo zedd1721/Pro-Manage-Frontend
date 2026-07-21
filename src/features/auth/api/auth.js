@@ -16,3 +16,7 @@ export const login = (payload) => {
 export const logout = () => {
     return fetchClient.post(ENDPOINTS.logout);
 };
+
+export const getMe = () => {
+    return fetchClient.get(ENDPOINTS.me);
+};

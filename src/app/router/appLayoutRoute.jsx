@@ -1,7 +1,8 @@
 /* eslint-disable react-refresh/only-export-components */
-import { Outlet, createRoute } from "@tanstack/react-router";
+import { Outlet, createRoute, redirect } from "@tanstack/react-router";
 import SideBar from "@/components/SideBar";
 import { rootRoute } from "@/app/router/rootRoute";
+import { getMe } from "@/features/auth/api/auth";
 
 function AppLayout() {
   return (
@@ -20,5 +21,19 @@ function AppLayout() {
 export const appLayoutRoute = createRoute({
   getParentRoute: () => rootRoute,
   id: "app-layout",
+
+  beforeLoad: async ({ location }) => {
+    try {
+      await getMe();
+    } catch {
+      throw redirect({
+        to: "/login",
+        search: {
+          redirect: location.href,
+        },
+      });
+    }
+  },
+
   component: AppLayout,
 });
